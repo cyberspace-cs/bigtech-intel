@@ -136,6 +136,7 @@ class RecruitIntel(Base):
     url = Column(String(512), default="")
     matched = Column(String(512), default="")  # 命中的跟踪厂，·分隔
     note = Column(Text, default="")
+    raw = Column(Text, default="")  # 原始粘贴文本（详情）
     date = Column(String(32), default="")  # 采集日期 YYYY-MM-DD
     created_at = Column(DateTime, default=datetime.utcnow)
 

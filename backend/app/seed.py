@@ -49,6 +49,14 @@ def _migrate_columns(db):
         db.commit()
 
 
+def _migrate_recruit_intel(db):
+    """recruit_intel 表补齐 raw 列（SQLite 仅支持 ADD COLUMN）。"""
+    cols = {c["name"] for c in inspect(db.bind).get_columns("recruit_intel")}
+    if "raw" not in cols:
+        db.execute(text("ALTER TABLE recruit_intel ADD COLUMN raw TEXT DEFAULT ''"))
+        db.commit()
+
+
 def _apply_profile(c: Company, data: dict):
     """更新单个公司的标量画像字段（含新增字段）。"""
     jd = data.get("jd", {})
@@ -99,6 +107,7 @@ def seed(db=None):
 
     try:
         _migrate_columns(db)
+        _migrate_recruit_intel(db)
 
         # —— 公司画像：幂等 upsert ——
         for data in S.TIER1 + S.TIER2 + S.TIER3:

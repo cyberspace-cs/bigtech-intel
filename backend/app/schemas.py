@@ -101,6 +101,7 @@ class RecruitIntelOut(BaseModel):
     url: str = ""
     matched: str = ""
     note: str = ""
+    raw: str = ""
     date: str = ""
     created_at: Optional[datetime] = None
 
@@ -112,6 +113,7 @@ class RecruitIntelCreate(BaseModel):
     """粘贴 JD 文本（或链接）即结构化；允许覆盖解析结果。"""
 
     text: str
+    raw: Optional[str] = None
     source: str = "BOSS直聘"
     url: Optional[str] = None
     company: Optional[str] = None

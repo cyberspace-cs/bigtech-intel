@@ -9,7 +9,7 @@ from ..jd_parse import parse_jd
 
 router = APIRouter(prefix="/api/jd", tags=["jd"])
 
-_OVERRIDE_KEYS = ("company", "title", "salary", "city", "jtype", "direction", "matched", "note")
+_OVERRIDE_KEYS = ("company", "title", "salary", "city", "jtype", "direction", "matched", "note", "raw")
 
 
 def _apply_overrides(d: dict, payload: RecruitIntelCreate):
@@ -32,7 +32,7 @@ def list_jd(
     query = db.query(RecruitIntel)
     if tier in (1, 2, 3):
         query = query.filter(RecruitIntel.tier == tier)
-    if jtype in (1, 2):
+    if jtype in (1, 2, 3, 4):
         query = query.filter(RecruitIntel.jtype == jtype)
     if q:
         like = f"%{q}%"

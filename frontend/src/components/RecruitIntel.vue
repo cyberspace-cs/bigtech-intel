@@ -16,15 +16,29 @@ const adding = ref(false)
 
 const sources = ref([])
 const showSources = ref(false)
+const openId = ref(null)
+const bossCities = [
+  { city: '北京', code: '101010100' },
+  { city: '上海', code: '101020100' },
+  { city: '深圳', code: '101280600' },
+]
+function bossSearchUrl(code) {
+  return `https://www.zhipin.com/web/geek/jobs?city=${code}&query=` + encodeURIComponent('Agent开发-大厂急招')
+}
 
 const stats = computed(() => {
-  let urgent = 0, social = 0
-  for (const r of rows.value) (r.jtype === 1 ? urgent++ : social++)
-  return { urgent, social, total: rows.value.length }
+  let urgent = 0, social = 0, intern = 0, campus = 0
+  for (const r of rows.value) {
+    if (r.jtype === 1) urgent++
+    else if (r.jtype === 3) intern++
+    else if (r.jtype === 4) campus++
+    else social++
+  }
+  return { urgent, social, intern, campus, total: rows.value.length }
 })
 
 const tierLabel = (t) => (t === 1 ? '第一梯队' : t === 2 ? '第二梯队' : t === 3 ? '第三梯队' : '通用')
-const jtypeLabel = (j) => (j === 1 ? '急招' : '社招')
+const jtypeLabel = (j) => (j === 1 ? '急招' : j === 3 ? '实习' : j === 4 ? '校招' : '社招')
 
 async function load() {
   loading.value = true
@@ -101,8 +115,8 @@ onMounted(load)
     <div class="panel">
       <h2>招聘情报台</h2>
       <p class="desc">
-        优先收集与我们 20 家跟踪厂 / 方向相关的 <b>急招</b> 与 <b>社招</b>。
-        BOSS / 猎聘等第三方平台走「粘贴 JD 文本 → 自动结构化 → 入库」；官网招聘页为官方源。
+        覆盖我们 20 家跟踪厂（一二三梯队）的 <b>急招</b> / <b>社招</b> / <b>实习</b> / <b>校招</b>。
+        BOSS / 猎聘等第三方平台走「粘贴 JD 文本 → 自动结构化 → 入库」；官网招聘页与公开渠道为官方源。
       </p>
 
       <!-- 筛选 -->
@@ -116,9 +130,11 @@ onMounted(load)
           <button class="chip" :class="{ active: tierF === 3 }" @click="setTier(3)">第三梯队</button>
         </div>
         <div class="chips">
-          <button class="chip" :class="{ active: jtypeF === 0 }" @click="setJtype(0)">急招+社招</button>
+          <button class="chip" :class="{ active: jtypeF === 0 }" @click="setJtype(0)">全部</button>
           <button class="chip" :class="{ active: jtypeF === 1 }" @click="setJtype(1)">仅急招</button>
           <button class="chip" :class="{ active: jtypeF === 2 }" @click="setJtype(2)">仅社招</button>
+          <button class="chip" :class="{ active: jtypeF === 3 }" @click="setJtype(3)">仅实习</button>
+          <button class="chip" :class="{ active: jtypeF === 4 }" @click="setJtype(4)">仅校招</button>
         </div>
       </div>
 
@@ -126,6 +142,8 @@ onMounted(load)
       <div class="jd-stats">
         <div class="jd-stat urgent"><div class="n">{{ stats.urgent }}</div><div class="l">急招</div></div>
         <div class="jd-stat social"><div class="n">{{ stats.social }}</div><div class="l">社招</div></div>
+        <div class="jd-stat intern"><div class="n">{{ stats.intern }}</div><div class="l">实习</div></div>
+        <div class="jd-stat campus"><div class="n">{{ stats.campus }}</div><div class="l">校招</div></div>
         <div class="jd-stat"><div class="n">{{ stats.total }}</div><div class="l">情报总数</div></div>
       </div>
     </div>
@@ -140,7 +158,7 @@ onMounted(load)
           <span class="tier-tag">{{ tierLabel(r.tier) }}</span>
         </div>
         <div class="jd-meta">
-          <span class="jt" :class="r.jtype === 1 ? 'urgent' : 'social'">{{ jtypeLabel(r.jtype) }}</span>
+          <span class="jt" :class="r.jtype === 1 ? 'urgent' : r.jtype === 3 ? 'intern' : r.jtype === 4 ? 'campus' : 'social'">{{ jtypeLabel(r.jtype) }}</span>
           <span v-if="r.company" class="m">{{ r.company }}</span>
           <span v-if="r.city" class="m">{{ r.city }}</span>
         </div>
@@ -151,6 +169,12 @@ onMounted(load)
           <span v-for="(m, i) in matchTags(r.matched)" :key="i" class="tag blue">{{ m }}</span>
         </div>
         <div v-if="r.note" class="jd-note">{{ r.note }}</div>
+        <div class="jd-actions">
+          <a v-if="r.url" class="lk" :href="r.url" target="_blank" rel="noopener">查看原帖 ↗</a>
+          <span v-else class="nolink">未附链接 · 粘贴 BOSS 分享链接可补全</span>
+          <button class="dt" v-if="r.raw" @click="openId = openId === r.id ? null : r.id">详情</button>
+        </div>
+        <div v-if="r.raw && openId === r.id" class="jd-raw"><pre>{{ r.raw }}</pre></div>
         <div class="jd-foot">
           <span class="src">{{ r.source }}<span v-if="r.date"> · {{ r.date }}</span></span>
           <button class="del" @click="doDelete(r.id)">删除</button>
@@ -190,6 +214,15 @@ onMounted(load)
       </div>
     </div>
 
+    <!-- BOSS 直搜 -->
+    <div class="panel" style="margin-top:22px;">
+      <h2>BOSS 直搜（点开即搜，粘贴结果入库）</h2>
+      <p class="desc">BOSS 需登录态，无法直接抓取。点下面城市按钮在浏览器打开搜索页，把 JD 全文粘贴到上方「添加情报」即可自动结构化入库。</p>
+      <div class="chips">
+        <a v-for="c in bossCities" :key="c.code" class="chip" :href="bossSearchUrl(c.code)" target="_blank" rel="noopener">{{ c.city }} · Agent开发急招 ↗</a>
+      </div>
+    </div>
+
     <!-- 情报源 -->
     <div class="panel" style="margin-top:22px;">
       <button class="src-toggle" @click="toggleSources">
@@ -225,6 +258,10 @@ onMounted(load)
 .jt { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 6px; }
 .jt.urgent { background: #fee2e2; color: #dc2626; }
 .jt.social { background: #f1f5f9; color: #475569; }
+.jt.intern { background: #ecfdf5; color: #059669; }
+.jt.campus { background: #eff6ff; color: #2563eb; }
+.jd-stat.intern .n { color: #059669; }
+.jd-stat.campus .n { color: #2563eb; }
 .jd-salary { font-size: 15px; font-weight: 800; color: #0f172a; margin: 4px 0; }
 .jd-matched { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .jd-matched .ml { font-size: 12px; color: var(--muted); }
@@ -248,4 +285,13 @@ textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29,78,
 .jd-preview .btn { margin-top: 6px; }
 
 .src-toggle { border: none; background: transparent; color: var(--primary); font-weight: 700; font-size: 14px; padding: 0; cursor: pointer; }
+
+.jd-actions { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+.jd-actions .lk { color: var(--primary); font-weight: 700; font-size: 12.5px; text-decoration: none; }
+.jd-actions .lk:hover { text-decoration: underline; }
+.jd-actions .nolink { font-size: 12px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 8px; border-radius: 6px; }
+.jd-actions .dt { border: 1px solid var(--border); background: #fff; color: var(--primary); border-radius: 8px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+.jd-raw { margin-top: 8px; background: #0f172a; color: #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+.jd-raw pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; line-height: 1.6; margin: 0; font-family: ui-monospace, Menlo, Consolas, monospace; }
+a.chip { text-decoration: none; color: var(--primary); font-weight: 600; }
 </style>

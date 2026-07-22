@@ -43,12 +43,13 @@ def parse_jd(text, source="BOSS直聘"):
         "city": "",
         "exp": "",
         "edu": "",
-        "jtype": 1 if "急招" in t else 2,
+        "jtype": 2,  # 默认社招；下方按关键词升级为 校招(4)/实习(3)/急招(1)
         "direction": "大模型 Agent 应用开发",
         "source": source,
         "url": "",
         "matched": "",
         "note": "",
+        "raw": t,
         "date": _today(),
     }
 
@@ -113,6 +114,16 @@ def parse_jd(text, source="BOSS直聘"):
         d["direction"] = "RAG / 搜索 Agent"
     else:
         d["direction"] = "大模型 Agent 应用开发"
+
+    # 招聘类型：校招/应届 > 实习 > 急招 > 社招（默认社招已在初始化设置）
+    if any(k in t for k in ["校招", "校园招聘", "应届", "秋招", "春招", "补录", "校园"]):
+        d["jtype"] = 4
+    elif any(k in t for k in ["实习", "日常实习", "暑期实习", "实习生"]):
+        d["jtype"] = 3
+    elif "急招" in t:
+        d["jtype"] = 1
+    else:
+        d["jtype"] = 2
 
     # 命中跟踪厂 + Phase 覆盖
     d["matched"] = _match_companies(t, d["direction"])
