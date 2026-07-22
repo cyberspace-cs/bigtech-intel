@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大厂情报站 · AI 大模型厂求职参谋</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 顶部 -->
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div>
+          <h1 id="brand-title">大厂情报站</h1>
+          <div class="sub" id="brand-sub">面向实习 / 校招 / 社招 · 业务线摸底</div>
+        </div>
+      </div>
+      <div class="searchrow" id="searchrow">
+        <div class="searchbox" id="searchbox-wrap">
+          <span class="ico">🔍</span>
+          <input id="searchbox" type="text" placeholder="搜索公司 / 方向 / 能力画像 / 关键人物（如：姚顺雨、清华、RAG、Agent、推理优化）" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 导航 -->
+  <nav class="nav">
+    <div class="wrap">
+      <button data-view="overview" class="active">🏢 公司画像</button>
+      <button data-view="lineage">🧬 团队背景图谱</button>
+      <button data-view="resume">📝 简历策略</button>
+      <button data-view="recruit">🔗 招聘入口速查</button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <!-- 公司画像视图 -->
+    <section id="view-overview">
+      <div class="stats" id="stats"></div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;" id="subtabs">
+        <button class="nav" data-tab="all" style="border:none;background:var(--c-primary);color:#fff;padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;">全部</button>
+        <button class="nav" data-tab="t1" style="border:none;background:var(--c-surface);color:var(--c-primary);padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;border:1px solid var(--c-border);">第一梯队 · 五大模型厂</button>
+        <button class="nav" data-tab="t2" style="border:none;background:var(--c-surface);color:var(--c-primary);padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;border:1px solid var(--c-border);">第二梯队 · 中小厂</button>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <!-- 背景图谱视图 -->
+    <section id="view-lineage" style="display:none;">
+      <h2 class="section-title"><span class="bar"></span>团队背景图谱 · 摸清出身与脉络</h2>
+      <p class="section-desc">面试前把“谁带的队、师从哪位、什么技术基因”摸清楚，才能在 HR / Leader 面前讲出业务线的来龙去脉。</p>
+      <div class="lineage-block" id="lin-qinghua"></div>
+      <div class="lineage-block" id="lin-beida"></div>
+    </section>
+
+    <!-- 简历策略视图 -->
+    <section id="view-resume" style="display:none;">
+      <h2 class="section-title"><span class="bar"></span>简历打磨 · 6 条具体改动</h2>
+      <p class="section-desc">应用到基础简历，命中 JD 高频词与“落地四件套”口径。</p>
+      <div class="tips-grid" id="tips"></div>
+
+      <h2 class="section-title" style="margin-top:8px;"><span class="bar"></span>分厂定制策略</h2>
+      <p class="section-desc">生成器对每份简历做三件事：(a) 求职意向改写 → (b) 技术栈按厂重排 → (c) 项目 Phase 按厂重排 + 增删定制 bullet。</p>
+      <div id="strategy"></div>
+    </section>
+
+    <!-- 招聘速查视图 -->
+    <section id="view-recruit" style="display:none;">
+      <h2 class="section-title"><span class="bar"></span>招聘入口速查表</h2>
+      <p class="section-desc">各厂官方招聘入口；投递前建议以官网最新 JD 为准，并用对应分厂简历。</p>
+      <div id="recruit"></div>
+    </section>
+
+    <div class="foot-note">
+      <div class="upd">资料更新：<span id="upd"></span></div>
+      <div id="metanote"></div>
+    </div>
+  </main>
+
+  <!-- 详情弹层 -->
+  <div class="modal-mask" id="modal-mask">
+    <div class="modal" id="modal">
+      <div class="modal-head">
+        <div class="emoji" id="modal-emoji">🏢</div>
+        <div>
+          <div class="mt" id="modal-title">公司</div>
+          <div class="mp" id="modal-priority"></div>
+        </div>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
