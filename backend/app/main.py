@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine
 from . import seed
-from .routers import companies, teams, resume, recruit, crawl
+from .routers import companies, teams, resume, recruit, crawl, jd
 
 app = FastAPI(title="大厂情报站 API", version="0.1.0")
 
@@ -24,6 +24,7 @@ app.include_router(teams.router)
 app.include_router(resume.router)
 app.include_router(recruit.router)
 app.include_router(crawl.router)
+app.include_router(jd.router)
 
 
 @app.on_event("startup")

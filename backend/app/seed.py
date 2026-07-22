@@ -18,6 +18,7 @@ from .models import (
     KeyPerson,
     LineageMember,
     RecruitEntry,
+    RecruitIntel,
     ResumeStrategy,
     ResumeTip,
 )
@@ -159,6 +160,11 @@ def seed(db=None):
                         sort=i,
                     )
                 )
+
+        # 招聘情报：仅空表时写入种子（来自用户粘贴的 BOSS 急招 JD）
+        if db.query(RecruitIntel).count() == 0:
+            for r in S.RECRUIT_INTEL_SEED:
+                db.add(RecruitIntel(**r))
 
         if db.query(CrawlLog).count() == 0:
             db.add(

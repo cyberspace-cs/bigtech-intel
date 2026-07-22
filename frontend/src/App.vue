@@ -6,6 +6,7 @@ import CompanyModal from './components/CompanyModal.vue'
 import LineagePanel from './components/LineagePanel.vue'
 import ResumePanel from './components/ResumePanel.vue'
 import RecruitPanel from './components/RecruitPanel.vue'
+import RecruitIntel from './components/RecruitIntel.vue'
 import CrawlPanel from './components/CrawlPanel.vue'
 
 const tab = ref('companies')
@@ -19,7 +20,7 @@ const tabs = [
   { key: 'companies', label: '公司画像' },
   { key: 'lineage', label: '团队背景图谱' },
   { key: 'resume', label: '简历策略' },
-  { key: 'recruit', label: '招聘速查' },
+  { key: 'recruit', label: '招聘情报' },
   { key: 'crawl', label: '爬虫 / 数据源' },
 ]
 
@@ -82,8 +83,8 @@ onMounted(loadCompanies)
     <!-- 简历策略 -->
     <ResumePanel v-else-if="tab === 'resume'" />
 
-    <!-- 招聘速查 -->
-    <RecruitPanel v-else-if="tab === 'recruit'" />
+    <!-- 招聘情报 -->
+    <RecruitIntel v-else-if="tab === 'recruit'" />
 
     <!-- 爬虫 -->
     <CrawlPanel v-else-if="tab === 'crawl'" />

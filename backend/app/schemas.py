@@ -86,6 +86,44 @@ class RecruitEntryOut(BaseModel):
     url: str
 
 
+class RecruitIntelOut(BaseModel):
+    id: int
+    tier: int = 0
+    company: str = ""
+    title: str = ""
+    salary: str = ""
+    city: str = ""
+    exp: str = ""
+    edu: str = ""
+    jtype: int = 2
+    direction: str = ""
+    source: str = ""
+    url: str = ""
+    matched: str = ""
+    note: str = ""
+    date: str = ""
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class RecruitIntelCreate(BaseModel):
+    """粘贴 JD 文本（或链接）即结构化；允许覆盖解析结果。"""
+
+    text: str
+    source: str = "BOSS直聘"
+    url: Optional[str] = None
+    company: Optional[str] = None
+    title: Optional[str] = None
+    salary: Optional[str] = None
+    city: Optional[str] = None
+    jtype: Optional[int] = None
+    direction: Optional[str] = None
+    matched: Optional[str] = None
+    note: Optional[str] = None
+
+
 class CrawlLogOut(BaseModel):
     id: int
     trigger: str = ""

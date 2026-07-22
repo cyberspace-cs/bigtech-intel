@@ -25,6 +25,10 @@ export const api = {
   resumeTips: () => request('GET', '/resume/tips'),
   resumeStrategy: () => request('GET', '/resume/strategy'),
   recruit: (tier = 0) => request('GET', '/recruit', null, { tier }),
+  jdList: (tier = 0, jtype = 0, q = '') => request('GET', '/jd', null, { tier, jtype, q }),
+  jdParse: (payload) => request('POST', '/jd/parse', payload),
+  jdAdd: (payload) => request('POST', '/jd', payload),
+  jdDelete: (jid) => request('DELETE', `/jd/${jid}`),
   crawlTrigger: (payload) => request('POST', '/crawl/trigger', payload),
   crawlLogs: () => request('GET', '/crawl/logs'),
   crawlFacts: (companyId) =>

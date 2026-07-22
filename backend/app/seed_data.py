@@ -841,3 +841,23 @@ RECRUIT_TABLE = [
     {"tier": 3, "company": "星动纪元", "direction": "具身 Agent 应用开发", "url": "https://www.robotera.com/"},
     {"tier": 3, "company": "灵初智能", "direction": "具身 Agent 应用开发", "url": "https://www.psibot.ai/careers_zh/"},
 ]
+
+# 招聘情报种子（来自用户粘贴的 BOSS 急招 JD，已由 jd_parse 结构化）。
+# 代招/猎头匿名发布，tier=0 表示未归类到具体跟踪厂，但方向命中多家。
+RECRUIT_INTEL_SEED = [
+    {
+        "tier": 0,
+        "company": "某人工智能公司（代招/猎头）",
+        "title": "Agent 开发工程师",
+        "salary": "40-70K·16薪",
+        "city": "北京",
+        "exp": "1-3年",
+        "edu": "本科",
+        "jtype": 1,
+        "direction": "大模型 Agent 应用开发",
+        "source": "BOSS直聘",
+        "url": "",
+        "matched": "腾讯混元·字节Seed·阿里通义·百度·京东·快手·美团·智谱GLM",
+        "note": "代招/猎头匿名；985/211 应届可投。命中 Phase A/B/C/D/E/F（工具网关/记忆/上下文RAG/多Agent编排/评测/可观测），与八周作品集路线高度对齐。",
+    },
+]

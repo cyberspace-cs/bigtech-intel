@@ -117,6 +117,29 @@ class RecruitEntry(Base):
     sort = Column(Integer, default=0)
 
 
+class RecruitIntel(Base):
+    """招聘情报条目：来自 BOSS / 官网 / 猎头代招的 JD 结构化记录。"""
+
+    __tablename__ = "recruit_intel"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    tier = Column(Integer, default=0)  # 0=未指定/通用 1/2/3 同 companies
+    company = Column(String(128), default="")
+    title = Column(String(256), default="")
+    salary = Column(String(64), default="")
+    city = Column(String(64), default="")
+    exp = Column(String(32), default="")
+    edu = Column(String(32), default="")
+    jtype = Column(Integer, default=2)  # 1=急招 2=社招
+    direction = Column(String(256), default="")
+    source = Column(String(64), default="BOSS直聘")
+    url = Column(String(512), default="")
+    matched = Column(String(512), default="")  # 命中的跟踪厂，·分隔
+    note = Column(Text, default="")
+    date = Column(String(32), default="")  # 采集日期 YYYY-MM-DD
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class CrawlFact(Base):
     """爬虫抓取到的公开事实，可挂到具体公司或独立留存。"""
 
