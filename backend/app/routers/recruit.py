@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/recruit", tags=["recruit"])
 @router.get("", response_model=list[RecruitEntryOut])
 def get_recruit(tier: int = Query(0), db: Session = Depends(get_db)):
     q = db.query(RecruitEntry)
-    if tier in (1, 2):
+    if tier in (1, 2, 3):
         q = q.filter(RecruitEntry.tier == tier)
     rows = q.order_by(RecruitEntry.sort).all()
     if rows:

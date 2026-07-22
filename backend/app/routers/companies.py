@@ -68,6 +68,7 @@ def _to_out(c: Company) -> CompanyOut:
         bg_sources=_parse_list(c.bg_sources),
         recent_developments=_parse_objs(c.recent_developments),
         tech_architecture=_parse_objs(c.tech_architecture),
+        core_products=_parse_objs(c.core_products),
         key_people=[
             {"name": p.name, "role": p.role, "detail": p.detail, "school": p.school}
             for p in people
@@ -79,11 +80,11 @@ def _to_out(c: Company) -> CompanyOut:
 @router.get("", response_model=list[CompanyOut])
 def list_companies(
     q: str = Query("", description="搜索：公司名/方向/能力画像/关键人物/技术栈"),
-    tier: int = Query(0, description="0=全部 1=第一梯队 2=第二梯队"),
+    tier: int = Query(0, description="0=全部 1=第一梯队大厂 2=第二梯队独角兽 3=第三梯队中小厂"),
     db: Session = Depends(get_db),
 ):
     query = db.query(Company)
-    if tier in (1, 2):
+    if tier in (1, 2, 3):
         query = query.filter(Company.tier == tier)
 
     companies = query.all()
@@ -105,6 +106,7 @@ def list_companies(
                     c.bg_summary,
                     " ".join(str(x) for x in _parse_objs(c.recent_developments)),
                     " ".join(str(x) for x in _parse_objs(c.tech_architecture)),
+                    " ".join(str(x) for x in _parse_objs(c.core_products)),
                     " ".join(p.name + " " + p.detail + " " + p.school for p in c.key_people),
                 ]
             ).lower()

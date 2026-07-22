@@ -12,6 +12,8 @@
   --tier1-b: #0ea5e9;
   --tier2-a: #475569;
   --tier2-b: #94a3b8;
+  --tier3-a: #7c3aed;
+  --tier3-b: #a855f7;
   --warn: #b45309;
   --ok: #15803d;
   --shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
@@ -88,6 +90,7 @@ a:hover { text-decoration: underline; }
   background: linear-gradient(90deg, var(--tier1-a), var(--tier1-b));
 }
 .card.t2::before { background: linear-gradient(90deg, var(--tier2-a), var(--tier2-b)); }
+.card.t3::before { background: linear-gradient(90deg, var(--tier3-a), var(--tier3-b)); }
 .card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(15,23,42,.14); }
 .card .head { display: flex; align-items: center; gap: 10px; }
 .card .emoji { font-size: 28px; }
@@ -97,6 +100,7 @@ a:hover { text-decoration: underline; }
   background: rgba(37,99,235,.12); color: var(--primary);
 }
 .card.t2 .tier-tag { background: rgba(100,116,139,.14); color: var(--muted); }
+.card.t3 .tier-tag { background: rgba(124,58,237,.12); color: #7c3aed; }
 .card .dir { color: var(--muted); font-size: 13px; margin: 8px 0 12px; }
 .card .stack { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag {
@@ -166,6 +170,15 @@ a:hover { text-decoration: underline; }
 }
 .arch-name { font-weight: 800; color: var(--primary); font-size: 14px; margin-bottom: 5px; }
 .arch-desc { font-size: 13px; line-height: 1.6; }
+
+/* 核心产品调研卡片 */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.product {
+  border: 1px solid var(--border); border-radius: 12px; padding: 13px 15px;
+  background: linear-gradient(180deg, #f8fbff, #ffffff); border-top: 3px solid var(--primary);
+}
+.product .pn { font-weight: 800; color: var(--primary); font-size: 14px; margin-bottom: 5px; }
+.product .pd { font-size: 13px; line-height: 1.6; }
 
 /* ---------- 通用面板 ---------- */
 .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }

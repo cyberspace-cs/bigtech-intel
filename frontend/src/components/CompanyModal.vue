@@ -56,6 +56,16 @@ const emit = defineEmits(['close'])
         <p class="muted-text">{{ company.bg_product }}</p>
       </div>
 
+      <div class="sec" v-if="company.core_products && company.core_products.length">
+        <h3>核心产品调研</h3>
+        <div class="product-grid">
+          <div class="product" v-for="(p, i) in company.core_products" :key="i">
+            <div class="pn">{{ p.name }}</div>
+            <div class="pd muted-text">{{ p.desc }}</div>
+          </div>
+        </div>
+      </div>
+
       <div class="sec" v-if="company.recent_developments && company.recent_developments.length">
         <h3>近期进展（发布的大模型 / 产品）</h3>
         <ul class="timeline">

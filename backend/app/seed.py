@@ -32,6 +32,7 @@ def _json(obj):
 _NEW_COLUMNS = {
     "recent_developments": "TEXT",
     "tech_architecture": "TEXT",
+    "core_products": "TEXT",
 }
 
 
@@ -71,6 +72,7 @@ def _apply_profile(c: Company, data: dict):
     c.bg_sources = _json(bg.get("sources", []))
     c.recent_developments = _json(data.get("recent", []))
     c.tech_architecture = _json(data.get("tech", []))
+    c.core_products = _json(data.get("products", []))
 
 
 def _build_company(data: dict) -> Company:
@@ -98,7 +100,7 @@ def seed(db=None):
         _migrate_columns(db)
 
         # —— 公司画像：幂等 upsert ——
-        for data in S.TIER1 + S.TIER2:
+        for data in S.TIER1 + S.TIER2 + S.TIER3:
             existing = db.query(Company).filter(Company.id == data["id"]).first()
             if existing:
                 _apply_profile(existing, data)
@@ -137,13 +139,22 @@ def seed(db=None):
                     )
                 )
 
-        if db.query(RecruitEntry).count() == 0:
-            for i, r in enumerate(S.RECRUIT_TABLE):
+        # recruit 表做 upsert：按 company 更新 tier/direction/url，保证梯队调整可回写
+        for i, r in enumerate(S.RECRUIT_TABLE):
+            existing = (
+                db.query(RecruitEntry).filter(RecruitEntry.company == r["company"]).first()
+            )
+            if existing:
+                existing.tier = r["tier"]
+                existing.direction = r["direction"]
+                existing.url = r["url"]
+                existing.sort = i
+            else:
                 db.add(
                     RecruitEntry(
                         tier=r["tier"],
                         company=r["company"],
-                        direction=r["dir"],
+                        direction=r["direction"],
                         url=r["url"],
                         sort=i,
                     )
@@ -156,7 +167,7 @@ def seed(db=None):
                     target="all",
                     adapter="seed",
                     status="success",
-                    message=f"初始化种子数据：{len(S.TIER1)+len(S.TIER2)} 家公司 / 2 个派系图谱 / {len(S.RESUME_TIPS)} 条简历建议。",
+                    message=f"初始化种子数据：{len(S.TIER1)+len(S.TIER2)+len(S.TIER3)} 家公司 / 2 个派系图谱 / {len(S.RESUME_TIPS)} 条简历建议。",
                 )
             )
 

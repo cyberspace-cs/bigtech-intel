@@ -65,6 +65,7 @@ onMounted(loadCompanies)
           <button class="chip" :class="{ active: tier === 0 }" @click="setTier(0)">全部</button>
           <button class="chip" :class="{ active: tier === 1 }" @click="setTier(1)">第一梯队</button>
           <button class="chip" :class="{ active: tier === 2 }" @click="setTier(2)">第二梯队</button>
+          <button class="chip" :class="{ active: tier === 3 }" @click="setTier(3)">第三梯队</button>
         </div>
       </div>
 

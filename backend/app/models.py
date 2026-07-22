@@ -20,7 +20,7 @@ class Company(Base):
 
     id = Column(String(64), primary_key=True)
     name = Column(String(128), nullable=False, index=True)
-    tier = Column(Integer, nullable=False, default=2)  # 1=第一梯队 2=第二梯队
+    tier = Column(Integer, nullable=False, default=2)  # 1=第一梯队大厂 2=第二梯队独角兽 3=第三梯队中小厂
     priority = Column(String(64), default="")
     emoji = Column(String(8), default="")
     direction = Column(String(128), default="")
@@ -45,6 +45,9 @@ class Company(Base):
     # 画像细化（近期进展 / 目前技术架构）
     recent_developments = Column(Text, default="[]")  # JSON list of {date,title,detail}
     tech_architecture = Column(Text, default="[]")  # JSON list of {name,desc}
+
+    # 核心产品调研
+    core_products = Column(Text, default="[]")  # JSON list of {name,desc}
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -15,7 +15,7 @@ onMounted(async () => { try { rows.value = await api.recruit() } catch (e) {} })
       </thead>
       <tbody>
         <tr v-for="r in rows" :key="r.company">
-          <td>{{ r.tier === 1 ? '第一梯队' : '第二梯队' }}</td>
+          <td>{{ r.tier === 1 ? '第一梯队' : r.tier === 2 ? '第二梯队' : '第三梯队' }}</td>
           <td>{{ r.company }}</td>
           <td>{{ r.direction }}</td>
           <td><a :href="r.url" target="_blank" rel="noopener">{{ r.url }}</a></td>

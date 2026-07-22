@@ -45,6 +45,7 @@ class CompanyOut(BaseModel):
     bg_sources: List[str] = []
     recent_developments: List[dict] = []
     tech_architecture: List[dict] = []
+    core_products: List[dict] = []
     key_people: List[KeyPersonOut] = []
     crawl_facts: List[CrawlFactOut] = []
 
