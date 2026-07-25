@@ -7,6 +7,7 @@ import LineagePanel from './components/LineagePanel.vue'
 import ResumePanel from './components/ResumePanel.vue'
 import RecruitPanel from './components/RecruitPanel.vue'
 import RecruitIntel from './components/RecruitIntel.vue'
+import LearningRoadmap from './components/LearningRoadmap.vue'
 import CrawlPanel from './components/CrawlPanel.vue'
 
 const tab = ref('companies')
@@ -21,6 +22,7 @@ const tabs = [
   { key: 'lineage', label: '团队背景图谱' },
   { key: 'resume', label: '简历策略' },
   { key: 'recruit', label: '招聘情报' },
+  { key: 'learning', label: '学习路线' },
   { key: 'crawl', label: '爬虫 / 数据源' },
 ]
 
@@ -85,6 +87,9 @@ onMounted(loadCompanies)
 
     <!-- 招聘情报 -->
     <RecruitIntel v-else-if="tab === 'recruit'" />
+
+    <!-- 学习路线 -->
+    <LearningRoadmap v-else-if="tab === 'learning'" />
 
     <!-- 爬虫 -->
     <CrawlPanel v-else-if="tab === 'crawl'" />
